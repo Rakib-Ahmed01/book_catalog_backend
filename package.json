@@ -19,6 +19,7 @@
     "src/**/*.ts": "yarn lint-format"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/http-status-codes": "^1.2.0",
@@ -34,10 +35,13 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
     "http-status-codes": "^2.2.0",
+    "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.3.4",
     "zod": "^3.21.4"
   }
