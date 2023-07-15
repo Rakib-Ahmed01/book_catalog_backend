@@ -53,6 +53,7 @@ export const getAllBooksService = async (
     Book.find({ $and: [searchCondition, filterObj] })
       .skip(skip)
       .limit(limit)
+      .select("-reviews")
       .sort({
         [sortBy]: sortOrder,
       })
@@ -75,7 +76,9 @@ export const getSingleBookService = async (id: string) => {
     throwApiError(StatusCodes.BAD_REQUEST, "Invalid book id");
   }
 
-  const book = await Book.findOne({ _id: id });
+  const book = await Book.findOne({ _id: id }).populate({
+    path: "reviews",
+  });
 
   if (!book) {
     throwApiError(StatusCodes.NOT_FOUND, "Book not found");

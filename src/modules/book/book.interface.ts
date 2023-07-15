@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import { Model, ObjectId } from "mongoose";
 
 export type TBook = {
   title: string;
@@ -6,6 +6,7 @@ export type TBook = {
   genre: string;
   publicationDate: string;
   email: string;
+  reviews: ObjectId[];
 };
 
 export type BookModel = Model<TBook>;

@@ -30,6 +30,7 @@ const bookSchema = new Schema<TBook, BookModel>(
         message: "Please provide a valid email",
       },
     },
+    reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
   },
   {
     timestamps: true,
