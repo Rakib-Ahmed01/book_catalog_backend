@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import { isValidObjectId } from "mongoose";
 import { AuthPayload } from "../../types";
 import { FilterOptions } from "../../types/FilterOptions";
 import { PaginationOptions } from "../../types/PaginationOptions";
@@ -67,4 +68,18 @@ export const getAllBooksService = async (
       total,
     },
   };
+};
+
+export const getSingleBookService = async (id: string) => {
+  if (!isValidObjectId(id)) {
+    throwApiError(StatusCodes.BAD_REQUEST, "Invalid book id");
+  }
+
+  const book = await Book.findOne({ _id: id });
+
+  if (!book) {
+    throwApiError(StatusCodes.NOT_FOUND, "Book not found");
+  }
+
+  return book;
 };

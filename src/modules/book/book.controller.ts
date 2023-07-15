@@ -6,7 +6,11 @@ import { QueryObject } from "../../types/QueryObject";
 import { pickOptions } from "../../utils/pickOptions";
 import { sendResponse } from "../../utils/sendResponse";
 import { TBook } from "./book.interface";
-import { createBookService, getAllBooksService } from "./book.services";
+import {
+  createBookService,
+  getAllBooksService,
+  getSingleBookService,
+} from "./book.services";
 
 export const createBook = expressAsyncHandler(async (req, res) => {
   const payload = req.payload;
@@ -42,5 +46,17 @@ export const getAllBooks = expressAsyncHandler(async (req, res) => {
     message: "Books retrieved successfully",
     data: result.data,
     meta: result.meta,
+  });
+});
+
+export const getSingleBook = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const book = await getSingleBookService(id);
+
+  sendResponse<TBook>(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Book retrieved successfully",
+    data: book,
   });
 });
