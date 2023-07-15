@@ -3,6 +3,7 @@ import { auth } from "../../middlewares/auth";
 import { validateRequest } from "../../utils/validateRequest";
 import {
   createBook,
+  deleteBook,
   getAllBooks,
   getSingleBook,
   updateBook,
@@ -14,7 +15,8 @@ export const bookRouter = express.Router();
 bookRouter
   .route("/:id")
   .get(getSingleBook)
-  .patch(auth(), validateRequest(updateBookZodSchema), updateBook);
+  .patch(auth(), validateRequest(updateBookZodSchema), updateBook)
+  .delete(auth(), deleteBook);
 
 bookRouter
   .route("/")

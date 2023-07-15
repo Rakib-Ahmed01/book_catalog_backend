@@ -8,6 +8,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { TBook } from "./book.interface";
 import {
   createBookService,
+  deleteBookService,
   getAllBooksService,
   getSingleBookService,
   updateBookService,
@@ -74,5 +75,17 @@ export const updateBook = expressAsyncHandler(async (req, res) => {
     statusCode: StatusCodes.OK,
     message: "Book updated successfully",
     data: updatedBook,
+  });
+});
+
+export const deleteBook = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const result = await deleteBookService(id, req.payload);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Book deleted successfully",
+    data: result,
   });
 });

@@ -111,3 +111,29 @@ export const updateBookService = async (
 
   return updatedBook;
 };
+
+export const deleteBookService = async (
+  id: string,
+  authPayload: AuthPayload,
+) => {
+  const { email } = authPayload;
+
+  if (!isValidObjectId(id)) {
+    throwApiError(StatusCodes.BAD_REQUEST, "Invalid book id");
+  }
+
+  const book = await Book.findOne({ _id: id });
+
+  if (!book) {
+    throwApiError(StatusCodes.NOT_FOUND, "Book not found");
+  } else if (book.email !== email) {
+    throwApiError(
+      StatusCodes.FORBIDDEN,
+      "Forbidden Access. You can not delete another user's book",
+    );
+  }
+
+  const result = await Book.deleteOne({ _id: id });
+
+  return result;
+};
