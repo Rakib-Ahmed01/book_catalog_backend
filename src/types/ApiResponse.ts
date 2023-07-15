@@ -3,4 +3,9 @@ export type ApiResponse<T> = {
   statusCode: number;
   message: string;
   data: T | T[] | null;
+  meta?: {
+    page: number;
+    limit: number;
+    total: number;
+  };
 };
