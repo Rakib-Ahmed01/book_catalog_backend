@@ -25,7 +25,7 @@ export const createReviewService = async (
 
     const book = await Book.findOne({ _id: bookId })
       .populate({
-        path: "bookId",
+        path: "reviews",
       })
       .session(session);
 
@@ -37,6 +37,21 @@ export const createReviewService = async (
       throwApiError(
         StatusCodes.BAD_REQUEST,
         "You can not review your own book",
+      );
+    }
+
+    const reviewers = await Review.find({ bookId: book._id })
+      .populate("reviewer")
+      .select("reviewer")
+      .distinct("reviewer")
+      .transform((v) => v.toString())
+      .lean()
+      .session(session);
+
+    if (reviewers.includes(_id as unknown as string)) {
+      throwApiError(
+        StatusCodes.CONFLICT,
+        "You have already reviewed this book",
       );
     }
 

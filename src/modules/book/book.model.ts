@@ -1,4 +1,6 @@
+import { StatusCodes } from "http-status-codes";
 import { Schema, model } from "mongoose";
+import throwApiError from "../../utils/throwApiError";
 import { validateEmail } from "../../utils/validateEmail";
 import { BookModel, TBook } from "./book.interface";
 
@@ -39,6 +41,16 @@ const bookSchema = new Schema<TBook, BookModel>(
     },
   },
 );
+
+bookSchema.pre("save", async function (next) {
+  const isDuplicateTitle = await Book.findOne({ title: this.title });
+
+  if (isDuplicateTitle) {
+    throwApiError(StatusCodes.CONFLICT, "Book already exists with the title");
+  }
+
+  next();
+});
 
 const Book = model<TBook, BookModel>("Book", bookSchema);
 
