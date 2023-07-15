@@ -18,6 +18,13 @@ export const createReviewService = async (
     throwApiError(StatusCodes.NOT_FOUND, "Book not found");
   }
 
+  if (_id?.toString() !== (review.reviewer as unknown as string)) {
+    throwApiError(
+      StatusCodes.FORBIDDEN,
+      "Forbidden Access. You can not review with another user's account",
+    );
+  }
+
   const session = await startSession();
 
   try {
@@ -52,6 +59,13 @@ export const createReviewService = async (
       throwApiError(
         StatusCodes.CONFLICT,
         "You have already reviewed this book",
+      );
+    }
+
+    if (reviewers.includes(review.reviewer as unknown as string)) {
+      throwApiError(
+        StatusCodes.FORBIDDEN,
+        "Forbidden Access. You can not review with another user's account",
       );
     }
 
