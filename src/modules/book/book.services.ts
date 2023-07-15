@@ -83,3 +83,31 @@ export const getSingleBookService = async (id: string) => {
 
   return book;
 };
+
+export const updateBookService = async (
+  id: string,
+  payload: Partial<TBook>,
+  authPayload: AuthPayload,
+) => {
+  const { email } = authPayload;
+
+  if (!isValidObjectId(id)) {
+    throwApiError(StatusCodes.BAD_REQUEST, "Invalid book id");
+  }
+
+  const book = await Book.findOne({ _id: id });
+
+  if (!book) {
+    throwApiError(StatusCodes.NOT_FOUND, "Book not found");
+  }
+
+  if (email !== book.email) {
+    throwApiError(StatusCodes.FORBIDDEN, "Forbidden Access");
+  }
+
+  const updatedBook = await Book.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
+
+  return updatedBook;
+};

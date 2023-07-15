@@ -10,6 +10,7 @@ import {
   createBookService,
   getAllBooksService,
   getSingleBookService,
+  updateBookService,
 } from "./book.services";
 
 export const createBook = expressAsyncHandler(async (req, res) => {
@@ -58,5 +59,20 @@ export const getSingleBook = expressAsyncHandler(async (req, res) => {
     statusCode: StatusCodes.OK,
     message: "Book retrieved successfully",
     data: book,
+  });
+});
+
+export const updateBook = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const payload = req.body;
+  const { _id, email } = req.payload;
+
+  const updatedBook = await updateBookService(id, payload, { _id, email });
+
+  sendResponse<TBook>(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Book updated successfully",
+    data: updatedBook,
   });
 });

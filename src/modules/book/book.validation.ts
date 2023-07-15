@@ -28,4 +28,8 @@ export const createBookZodSchema = z.object({
   }),
 });
 
-export const updateBookZodSchema = createBookZodSchema.deepPartial();
+export const updateBookZodSchema = createBookZodSchema
+  .deepPartial()
+  .refine((updateData) => {
+    return Object.keys(updateData.body || {}).length > 0;
+  }, "Missing update data");
