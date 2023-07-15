@@ -38,3 +38,12 @@ export const loginUserZodSchema = z.object({
       .refine(validateEmail, "Invalid email"),
   }),
 });
+
+export const refreshTokenZodSchema = z.object({
+  cookies: z.object({
+    refreshToken: z.string({
+      required_error: "Refresh Token is required",
+      invalid_type_error: "Refresh Token must be a string",
+    }),
+  }),
+});

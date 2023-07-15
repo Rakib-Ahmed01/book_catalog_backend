@@ -1,5 +1,8 @@
 import bcrypt from "bcrypt";
 import { StatusCodes } from "http-status-codes";
+import jwt from "jsonwebtoken";
+import { Schema } from "mongoose";
+import env from "../../config";
 import { generateJwtTokens } from "../../utils/generateJwtTokens";
 import throwApiError from "../../utils/throwApiError";
 import { TUser } from "../user/user.interface";
@@ -23,7 +26,7 @@ export const loginUserService = async (payload: {
   password: string;
 }) => {
   const { email, password } = payload;
-  const user = await User.findOne({ email }).select("password").lean();
+  const user = await User.findOne({ email }).select("password email").lean();
 
   if (!user) {
     throwApiError(StatusCodes.NOT_FOUND, `User not found`);
@@ -44,4 +47,29 @@ export const loginUserService = async (payload: {
     accessToken,
     refreshToken,
   };
+};
+
+export const refreshTokenService = async (refreshToken: string) => {
+  let decodedData = {} as { email: string; _id: Schema.Types.ObjectId };
+
+  try {
+    decodedData = jwt.verify(refreshToken, env.refreshTokenSecret) as {
+      email: string;
+      _id: Schema.Types.ObjectId;
+    };
+  } catch (error) {
+    throwApiError(StatusCodes.FORBIDDEN, "Invalid token");
+  }
+
+  const { _id, email } = decodedData;
+
+  const user = await User.findOne({ _id, email });
+
+  if (!user) {
+    throwApiError(StatusCodes.NOT_FOUND, `User not found`);
+  }
+
+  const { accessToken } = generateJwtTokens({ email, _id });
+
+  return accessToken;
 };

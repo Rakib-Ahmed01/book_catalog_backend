@@ -1,7 +1,11 @@
 import express from "express";
 import { validateRequest } from "../../utils/validateRequest";
-import { loginUser, registerUser } from "./auth.controller";
-import { loginUserZodSchema, registerUserZodSchema } from "./auth.validation";
+import { loginUser, refreshToken, registerUser } from "./auth.controller";
+import {
+  loginUserZodSchema,
+  refreshTokenZodSchema,
+  registerUserZodSchema,
+} from "./auth.validation";
 
 export const authRouter = express.Router();
 
@@ -13,4 +17,8 @@ authRouter.post(
 
 authRouter.post("/login", validateRequest(loginUserZodSchema), loginUser);
 
-authRouter.get("/refresh-token");
+authRouter.get(
+  "/refresh-token",
+  validateRequest(refreshTokenZodSchema),
+  refreshToken,
+);
