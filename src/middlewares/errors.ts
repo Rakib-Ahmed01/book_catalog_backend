@@ -8,17 +8,17 @@ import { handleZodValidationError } from "../error/handleZodValidationError";
 import { GenericErrorMessage } from "../types/GenericErrorMessage";
 import throwApiError from "../utils/throwApiError";
 
-export const notFoundHandler: RequestHandler = (req, res, next) => {
+export const notFoundHandler: RequestHandler = (_req, _res, next) => {
   const error = throwApiError(StatusCodes.NOT_FOUND, "404 Resource not found!");
   next(error);
 };
 
 export const globalErrorHandler: ErrorRequestHandler = (
   error,
-  req,
+  _req,
   res,
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-  next,
+  _next,
 ) => {
   const errors: GenericErrorMessage[] = [];
   let status = error?.status ? error.status : 500;
