@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
+import { LoginResponse } from "../../types/LoginResponse";
 import { sendResponse } from "../../utils/sendResponse";
 import { TUser } from "../user/user.interface";
-import { registerUserService } from "./auth.services";
+import { loginUserService, registerUserService } from "./auth.services";
 
 export const registerUser = expressAsyncHandler(
   async (req: Request, res: Response) => {
@@ -17,3 +18,19 @@ export const registerUser = expressAsyncHandler(
     });
   },
 );
+
+export const loginUser = expressAsyncHandler(async (req, res) => {
+  const { accessToken, refreshToken } = await loginUserService(req.body);
+
+  res.cookie("refreshToken", refreshToken, {
+    secure: process.env.ENV === "production",
+    httpOnly: true,
+  });
+
+  sendResponse<LoginResponse>(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "User logged in successfully",
+    data: { accessToken },
+  });
+});
