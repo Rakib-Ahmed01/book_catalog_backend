@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import { authRouter } from "../modules/auth/auth.route";
 import { bookRouter } from "../modules/book/book.route";
+import { readingRouter } from "../modules/reading/reading.route";
 import { reviewRouter } from "../modules/review/review.route";
 import { wishListRouter } from "../modules/wishlist/wishlist.route";
 
@@ -27,6 +28,10 @@ const routes: Route[] = [
   {
     path: "/wishlists",
     router: wishListRouter,
+  },
+  {
+    path: "/readings",
+    router: readingRouter,
   },
 ];
 
