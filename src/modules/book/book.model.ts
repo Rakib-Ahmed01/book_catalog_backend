@@ -26,7 +26,6 @@ const bookSchema = new Schema<TBook, BookModel>(
     email: {
       type: String,
       required: [true, "Email is required"],
-      unique: true,
       validate: {
         validator: validateEmail,
         message: "Please provide a valid email",

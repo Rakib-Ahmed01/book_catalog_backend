@@ -2,6 +2,7 @@ import express, { Router } from "express";
 import { authRouter } from "../modules/auth/auth.route";
 import { bookRouter } from "../modules/book/book.route";
 import { reviewRouter } from "../modules/review/review.route";
+import { wishListRouter } from "../modules/wishlist/wishlist.route";
 
 export const router = express.Router();
 
@@ -22,6 +23,10 @@ const routes: Route[] = [
   {
     path: "/reviews",
     router: reviewRouter,
+  },
+  {
+    path: "/wishlists",
+    router: wishListRouter,
   },
 ];
 

@@ -3,7 +3,6 @@ import { isValidObjectId } from "mongoose";
 import { AuthPayload } from "../../types";
 import { FilterOptions } from "../../types/FilterOptions";
 import { PaginationOptions } from "../../types/PaginationOptions";
-import { PaginationResponse } from "../../types/PaginationResponse";
 import { calculateSkip } from "../../utils/calculateSkip";
 import { generateSearchCondition } from "../../utils/generateSearchCondition";
 import { handleFilters } from "../../utils/handleFilters";
@@ -37,7 +36,7 @@ export const createBookService = async (
 export const getAllBooksService = async (
   paginationOptions: PaginationOptions,
   filterOptions: FilterOptions,
-): Promise<PaginationResponse<TBook[]>> => {
+) => {
   const { limit, page, skip } = calculateSkip(paginationOptions);
   const { sortBy, sortOrder } = paginationOptions;
   const { searchTerm, ...filters } = filterOptions;
@@ -49,7 +48,7 @@ export const getAllBooksService = async (
     "genre",
   ]);
 
-  const [books, total] = await Promise.all([
+  const [books, total, genres, publicationYears] = await Promise.all([
     Book.find({ $and: [searchCondition, filterObj] })
       .skip(skip)
       .limit(limit)
@@ -59,10 +58,13 @@ export const getAllBooksService = async (
       })
       .lean(),
     Book.countDocuments(),
+    await Book.find().distinct("genre"),
+    await Book.find().distinct("publicationDate"),
   ]);
 
   return {
     data: books,
+    filterData: { genres, publicationYears },
     meta: {
       limit,
       page,
@@ -78,6 +80,10 @@ export const getSingleBookService = async (id: string) => {
 
   const book = await Book.findOne({ _id: id }).populate({
     path: "reviews",
+    populate: {
+      path: "reviewer",
+    },
+    options: { sort: { createdAt: 1 } },
   });
 
   if (!book) {

@@ -42,12 +42,13 @@ export const getAllBooks = expressAsyncHandler(async (req, res) => {
 
   const result = await getAllBooksService(paginationOptions, filters);
 
-  sendResponse<TBook>(res, {
+  sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
     message: "Books retrieved successfully",
     data: result.data,
     meta: result.meta,
+    filterData: result.filterData,
   });
 });
 

@@ -8,4 +8,5 @@ export type ApiResponse<T> = {
     limit: number;
     total: number;
   };
+  filterData?: object;
 };

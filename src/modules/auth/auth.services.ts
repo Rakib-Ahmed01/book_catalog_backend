@@ -26,7 +26,9 @@ export const loginUserService = async (payload: {
   password: string;
 }) => {
   const { email, password } = payload;
-  const user = await User.findOne({ email }).select("password email").lean();
+  const user = await User.findOne({ email })
+    .select("password email name")
+    .lean();
 
   if (!user) {
     throwApiError(StatusCodes.NOT_FOUND, `User not found`);
@@ -46,6 +48,7 @@ export const loginUserService = async (payload: {
   return {
     accessToken,
     refreshToken,
+    user: { name: user?.name, email: user?.email },
   };
 };
 
@@ -71,5 +74,5 @@ export const refreshTokenService = async (refreshToken: string) => {
 
   const { accessToken } = generateJwtTokens({ email, _id });
 
-  return accessToken;
+  return { accessToken, user: { name: user?.name, email: user?.email } };
 };

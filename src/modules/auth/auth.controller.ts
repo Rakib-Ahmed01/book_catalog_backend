@@ -24,7 +24,7 @@ export const registerUser = expressAsyncHandler(
 );
 
 export const loginUser = expressAsyncHandler(async (req, res) => {
-  const { accessToken, refreshToken } = await loginUserService(req.body);
+  const { accessToken, refreshToken, user } = await loginUserService(req.body);
 
   res.cookie("refreshToken", refreshToken, {
     secure: process.env.ENV === "production",
@@ -35,13 +35,13 @@ export const loginUser = expressAsyncHandler(async (req, res) => {
     success: true,
     statusCode: StatusCodes.OK,
     message: "User logged in successfully",
-    data: { accessToken },
+    data: { accessToken, user },
   });
 });
 
 export const refreshToken = expressAsyncHandler(async (req, res) => {
   const { refreshToken } = req.cookies;
-  const accessToken = await refreshTokenService(refreshToken);
+  const { accessToken, user } = await refreshTokenService(refreshToken);
 
   res.cookie("refreshToken", refreshToken, {
     secure: process.env.ENV === "production",
@@ -52,6 +52,6 @@ export const refreshToken = expressAsyncHandler(async (req, res) => {
     success: true,
     statusCode: StatusCodes.OK,
     message: "New access token generated successfully!",
-    data: { accessToken },
+    data: { accessToken, user },
   });
 });
