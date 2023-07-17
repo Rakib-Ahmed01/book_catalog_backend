@@ -4,6 +4,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { TWishList } from "./wishlist.interface";
 import {
   createWishListService,
+  deleteWishListService,
   getAllWishListsService,
 } from "./wishlist.services";
 
@@ -27,5 +28,17 @@ export const getAllWishLists = expressAsyncHandler(async (req, res) => {
     statusCode: StatusCodes.OK,
     message: "WishLists retrieved successfully",
     data: wishLists,
+  });
+});
+
+export const deleteWishList = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const result = await deleteWishListService(id, req.payload);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "WishList deleted successfully",
+    data: result,
   });
 });
