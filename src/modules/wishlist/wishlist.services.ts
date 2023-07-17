@@ -13,7 +13,7 @@ export const createWishListService = async (wishList: TWishList) => {
 export const getAllWishListsService = async (email: string) => {
   const wishlists = await WishList.find({ email })
     .select("bookId")
-    .distinct("bookId")
+    .populate("bookId")
     .lean();
   return wishlists;
 };
@@ -28,7 +28,7 @@ export const deleteWishListService = async (
     throwApiError(StatusCodes.BAD_REQUEST, "Invalid wishlist id");
   }
 
-  const wishlist = await WishList.findOne({ _id: id });
+  const wishlist = await WishList.findOne({ _id: id, email });
 
   if (!wishlist) {
     throwApiError(StatusCodes.NOT_FOUND, "WishList not found");
@@ -39,7 +39,7 @@ export const deleteWishListService = async (
     );
   }
 
-  const result = await WishList.deleteOne({ _id: id });
+  const result = await WishList.deleteOne({ _id: id, email });
 
   return result;
 };
