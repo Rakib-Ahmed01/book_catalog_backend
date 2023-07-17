@@ -1,5 +1,6 @@
 import { isValidObjectId } from "mongoose";
 import { z } from "zod";
+import { validateEmail } from "../../utils/validateEmail";
 
 export const createWishListZodSchema = z.object({
   body: z.object({
@@ -11,14 +12,12 @@ export const createWishListZodSchema = z.object({
       .refine((id) => {
         return isValidObjectId(id);
       }, "Invalid book id"),
-    userId: z
+    email: z
       .string({
-        required_error: "User Id is required",
-        invalid_type_error: "User Id must be a string",
+        required_error: "Email is required",
+        invalid_type_error: "Email must be a string",
       })
-      .refine((id) => {
-        return isValidObjectId(id);
-      }, "Invalid user id"),
+      .refine(validateEmail, "Please provide a valid email"),
   }),
 });
 

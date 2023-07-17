@@ -2,7 +2,7 @@ import { Model, ObjectId } from "mongoose";
 
 export type TWishList = {
   bookId: ObjectId;
-  userId: ObjectId;
+  email: string;
 };
 
 export type WishListModel = Model<TWishList>;
